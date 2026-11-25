@@ -5,3 +5,5 @@ No external runtime dependencies or JavaScript. Temporary inline SVG scenery.
 Test all active links, return routes, keyboard focus, refresh and Chromebook when available. Continue and Settings intentionally inactive.
 
 Market edition: approved PNG in assets/market.png; CSS lantern glow and drifting motes; reduced-motion supported. Upload assets and css folders intact.
+
+Build 002.1: stronger foreground lantern flicker, visible embers, revised tagline.

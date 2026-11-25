@@ -16,3 +16,11 @@
 @keyframes drift{0%{opacity:0;transform:translate(0,0)}25%{opacity:.65}75%{opacity:.4}100%{opacity:0;transform:translate(28px,-35px)}}
 @media(max-width:800px){.market-home .layout{display:flex;flex-direction:column;align-items:stretch;padding:0 16px 24px;gap:16px}.market-art{position:relative;z-index:0;margin:0 -16px;aspect-ratio:1648/928;flex:none}.market-home .panel{margin-top:0}.market-art img,.market-art .effects{width:100%;height:100%;top:0;transform:none}}
 @media(prefers-reduced-motion:reduce){.lantern,.mote{animation:none}.lantern{opacity:.2}.mote{display:none}}
+
+/* Build 002.1: aligned flame cores and visible ambient embers. */
+.lantern{width:var(--w);height:var(--h);aspect-ratio:auto;background:radial-gradient(ellipse at 50% 56%,rgba(255,250,190,.95) 0%,rgba(255,195,65,.8) 28%,rgba(255,133,24,.24) 58%,transparent 74%);animation:flame-flicker 1.9s var(--delay) infinite;mix-blend-mode:screen}
+.lantern::after{content:"";position:absolute;inset:-65%;background:radial-gradient(ellipse,rgba(255,163,39,.34),rgba(255,119,18,.13) 38%,transparent 70%)}
+@keyframes flame-flicker{0%,100%{opacity:.22}12%{opacity:.88}24%{opacity:.48}37%{opacity:1}51%{opacity:.35}64%{opacity:.85}78%{opacity:.55}90%{opacity:.95}}
+.mote{width:var(--size);height:var(--size);background:#ffe6a0;box-shadow:0 0 4px 1px #ffb942,0 0 10px #ff9b34;animation:ember-drift var(--duration) var(--delay) infinite linear}
+@keyframes ember-drift{0%{opacity:0;transform:translate(0,12px)}15%{opacity:.95}55%{opacity:.8}85%{opacity:.9}100%{opacity:0;transform:translate(var(--dx),-75px)}}
+@media(prefers-reduced-motion:reduce){.lantern{animation:none;opacity:.25}.mote{animation:none;display:none}}
