@@ -1,0 +1,1 @@
+Incremental patch over 003.3. Upload preserving folders. Old deformation assets are no longer referenced. Original market.png retained. Static background uses localized inpainting; check visual seams. Audio/settings/save files unchanged. Reduced motion uses still sprites.
