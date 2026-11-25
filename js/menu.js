@@ -1,10 +1,23 @@
 import {fresh} from './state.js';import {read,write,parseSave,download} from './storage.js?v=0031';
-const $=id=>document.getElementById(id);let record=null, problem='', localSaved=null, unreadable=false;
-try{record=read();localSaved=record?.savedAt||null;}catch(e){problem='Browser save could not be read. Import a backup or start a new adventure.';unreadable=true;}
+const $=id=>document.getElementById(id);
+const simulation=new URLSearchParams(location.search).get('storageTest')==='1';
+let blocked=false, simulatedRaw=null;
+const testStore={getItem(){if(blocked)throw Error('Simulated storage blocked');return simulatedRaw;},setItem(key,value){if(blocked)throw Error('Simulated storage blocked');simulatedRaw=value;}};
+const load=()=>simulation?read(testStore):read();
+const store=record=>simulation?write(record,testStore):write(record);
+let record=null, problem='', localSaved=null, unreadable=false;
+try{record=load();localSaved=record?.savedAt||null;}catch(e){problem='Browser save could not be read. Import a backup or start a new adventure.';unreadable=true;}
 function render(){ $('status').textContent=problem||'Browser storage available for the last successful save (future persistence is not guaranteed).';$('summary').textContent=record?`${record.state.player.name} · Day ${record.state.farm.day} · Level ${record.state.player.level} · ${record.state.inventory.coins} coins · Test actions: ${record.state.progress.testActions}`:'No active adventure.';$('timestamps').textContent=record?`Last local save: ${localSaved||'None this session'} | Last export requested: ${record.exportedAt||'Never'}${!record.exportedAt||record.exportedRevision!==record.revision?' | Backup recommended: progress may be newer than export.':''}`:'';for(const id of ['save','export','action','resume'])$(id).disabled=!record;}
-function persist(){try{const stamp=new Date().toISOString();write({...record,savedAt:stamp});record.savedAt=stamp;localSaved=stamp;problem='';unreadable=false;}catch(e){problem='Browser autosave failed. Your progress is still in this tab. Export now before leaving!';}render();}
+function persist(){try{const stamp=new Date().toISOString();store({...record,savedAt:stamp});record.savedAt=stamp;localSaved=stamp;problem='';unreadable=false;}catch(e){problem='Browser autosave failed. Your progress is still in this tab. Export now before leaving!';}render();}
 function replace(state){if((record||unreadable)&&!confirm('Replace the current browser adventure? Cancel to export your current progress first.'))return;record={state,revision:0,exportedAt:null,exportedRevision:null};localSaved=null;persist();$('play').hidden=false;}
 $('new').onclick=()=>replace(fresh());$('resume').onclick=()=>{$('play').hidden=false;};$('save').onclick=persist;$('action').onclick=()=>{record.state.progress.testActions++;record.state.updatedAt=new Date().toISOString();record.revision++;persist();};$('export').onclick=()=>{try{download(record.state);record.exportedAt=new Date().toISOString();record.exportedRevision=record.revision;persist();$('notice').textContent='Export requested. Check that the file downloaded and keep it somewhere safe.';}catch(e){$('notice').textContent='Export failed: '+e.message;}};
 $('file').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{if(file.size>1000000)throw Error('Save file too large.');replace(parseSave(await file.text()));$('notice').textContent='Import processed. Check your active adventure.';}catch(err){$('notice').textContent=err.message;}e.target.value='';};
 $('home').onclick=e=>{if(record&&(!record.exportedAt||record.exportedRevision!==record.revision||problem)&&!confirm('Export your current progress before leaving. Leave anyway?'))e.preventDefault();};
 render();if(location.hash==='#new'&&!record&&!unreadable)replace(fresh());
+
+if(simulation){
+ $('diagnostics').hidden=false;
+ $('simstatus').textContent='Simulation: storage available; isolated from real saves.';
+ $('block').onclick=()=>{blocked=!blocked;$('block').textContent=blocked?'Unblock simulated storage':'Block simulated storage';$('simstatus').textContent=blocked?'Simulation: storage blocked.':'Simulation: storage available.';if(record)persist();};
+ $('clear').onclick=()=>{if(!confirm('Discard simulated active adventure and clear simulated storage?'))return;simulatedRaw=null;record=null;localSaved=null;unreadable=false;problem='';$('play').hidden=true;$('notice').textContent='Simulated save cleared. Import an exported backup.';render();};
+}

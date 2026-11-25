@@ -1,0 +1,1 @@
+Build 003.2 incremental patch for 003.1. Updated help instructions and isolated storage simulation at continue.html?storageTest=1. Simulation uses temporary in-memory storage, not real browser saves. Normal Continue behavior unchanged. Upload included files only.
