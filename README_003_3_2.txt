@@ -1,0 +1,1 @@
+Visual baseline restoration: original market.png, no chicken or bunting overlays. Existing audio, settings, lanterns and motes retained. This is a static-art approval checkpoint, not a new animation implementation. Upload at repository root.
