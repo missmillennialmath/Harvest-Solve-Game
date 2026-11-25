@@ -1,0 +1,1 @@
+Build 004.2: appearance preview only. Upload preserving paths. Includes corrected base sprites and original draft masks. No save changes. Skin resets on species change; other options persist while rotating. Test clipping, wing colors and eye alignment.

@@ -1,0 +1,2 @@
+// mask: ImageData; white = root, black = length. Null root gives solid length color.
+function recolorHair(image,mask,length,root=null){const out=new ImageData(new Uint8ClampedArray(image.data),image.width,image.height);const rgb=h=>h.match(/[0-9a-f]{2}/gi).map(x=>parseInt(x,16));const a=rgb(length),b=root?rgb(root):a;for(let i=0;i<out.data.length;i+=4){let s=image.data[i];if(!image.data[i+3]||s<40)continue;let c=mask&&mask.data[i]>127?b:a;for(let k=0;k<3;k++)out.data[i+k]=Math.min(255,Math.round(c[k]*s/145));}return out;}
