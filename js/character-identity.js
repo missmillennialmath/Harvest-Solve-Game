@@ -14,7 +14,19 @@ function update(){begin.disabled=committed||!window.characterReady||!valid();}
 name.addEventListener('input',update);document.addEventListener('character-preview-change',update);
 el('randomName').onclick=()=>{name.value=generateName(name.value);update();};
 el('randomAppearance').onclick=()=>window.randomizeCharacter();
-begin.onclick=()=>{if(!valid()||!window.characterReady||committed)return;let existing=null,unknown=false;try{existing=read();}catch{unknown=true;}if((existing||unknown)&&!confirm('Replace your current browser adventure? Cancel to export your existing progress first.'))return;
+const overwriteDialog=el('overwriteDialog');
+function confirmOverwrite(){return new Promise(resolve=>{
+ if(!overwriteDialog||typeof overwriteDialog.showModal!=='function'){resolve(window.confirm('Overwrite your existing character, farm, inventory and progress?'));return;}
+ overwriteDialog.returnValue='cancel';
+ overwriteDialog.addEventListener('close',()=>resolve(overwriteDialog.returnValue==='overwrite'),{once:true});
+ overwriteDialog.showModal();el('overwriteCancel').focus();
+});}
+el('overwriteCancel').onclick=()=>overwriteDialog.close('cancel');
+el('overwriteConfirm').onclick=()=>overwriteDialog.close('overwrite');
+overwriteDialog.addEventListener('cancel',e=>{e.preventDefault();overwriteDialog.close('cancel');});
+overwriteDialog.addEventListener('click',e=>{if(e.target!==overwriteDialog)return;const r=overwriteDialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)overwriteDialog.close('cancel');});
+let deciding=false;
+begin.onclick=async()=>{if(!valid()||!window.characterReady||committed||deciding)return;let existing=null,unknown=false;try{existing=read();}catch{unknown=true;}if(existing||unknown){deciding=true;let approved=false;try{approved=await confirmOverwrite();}finally{deciding=false;}if(!approved)return;}if(!valid()||!window.characterReady||committed)return;
 const state=fresh();state.player.name=name.value.trim();state.player.appearance=window.characterAppearance();pending={state,revision:0,exportedAt:null,exportedRevision:null,savedAt:new Date().toISOString()};
 try{write(pending);committed=true;location.href='continue.html#created';}catch{pending.savedAt=null;committed=true;notice.textContent='Browser save failed. Your new farmer is still in this tab. Export now before leaving, then import the file in The Chronicles.';el('exportCreated').hidden=false;update();}};
 el('exportCreated').onclick=()=>{if(!pending)return;try{download(pending.state);notice.textContent='Export requested. Verify the downloaded file before leaving, then import it in The Chronicles.';}catch(e){notice.textContent='Export failed: '+e.message;}};
