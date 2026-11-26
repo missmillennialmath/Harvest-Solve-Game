@@ -1,0 +1,1 @@
+Install over 004.3.1 or 004.3.2. Includes latest skin palettes. Classic Lilac uses original sprite unchanged. Other wings use new pixel layers. Save appearance includes wingShape and wingColor for fairies only; old saves remain valid. Browser testing required, especially wing/body boundaries and hair overlap. No credits or save engine changes.

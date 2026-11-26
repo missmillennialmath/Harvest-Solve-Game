@@ -1,1 +1,0 @@
-Install over 004.4.2. Copy contents into repository root. Four new hairstyles and four root presets; three skin replacements. Legacy skin names and hex values retained separately; existing saves store skinHex. New hair art is provisional; inspect all views and species. No browser testing performed.
