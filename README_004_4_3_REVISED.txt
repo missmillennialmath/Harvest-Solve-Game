@@ -1,0 +1,1 @@
+Apply only to verified Build 004.4.2 on a development branch. Preserve folder paths. Test locally before committing. Includes 144 existing makeover PNGs, updated palette, preview, identity and HTML. Legacy skin hex values retained in save data; no save engine changes. Visual and browser tests pending.

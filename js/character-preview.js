@@ -9,6 +9,7 @@ function recolorSkin(im,mask,race,index){const d=new ImageData(new Uint8ClampedA
 function setupSkins(){ $('skins').replaceChildren(...skinPalettes[species].map(([name,hex],i)=>{const b=document.createElement('button');b.type='button';const chip=document.createElement('span');chip.className='chip';chip.style.background=hex;b.append(chip,name);b.dataset.skin=i;b.onclick=()=>{skin=i;render();};return b;}));}
 function options(id,values,format=x=>x){$(id).replaceChildren(...values.map(v=>new Option(format(v),v)));}
 options('hair',hairStyles,title);options('color',Object.keys(hairPalettes.colors));options('preset',Object.keys(hairPalettes.presets));
+const hairHex=value=>hairPalettes.colors[value]||value;
 function setupHairSwatches(id, entries){
   const group=$(id+'Swatches');
   group.replaceChildren(...entries.map(([name,background])=>{
@@ -19,12 +20,12 @@ function setupHairSwatches(id, entries){
 }
 function syncHairSwatches(){for(const id of ['color','preset']) $(id+'Swatches').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.hairValue===$(id).value)));}
 setupHairSwatches('color',Object.entries(hairPalettes.colors));
-setupHairSwatches('preset',Object.entries(hairPalettes.presets).map(([name,[root,length]])=>[name,`linear-gradient(90deg,${hairPalettes.colors[root]} 50%,${hairPalettes.colors[length]} 50%)`]));
+setupHairSwatches('preset',Object.entries(hairPalettes.presets).map(([name,[root,length]])=>[name,`linear-gradient(90deg,${hairHex(root)} 50%,${hairHex(length)} 50%)`]));
 const wingPalettes={"classic": ["lilac", "rose", "moonlight", "midnight_goth", "crimson_goth"], "flame": ["ember", "dragonfire", "witchfire"], "water": ["glacier", "seafoam", "deepwater"], "leaf": ["spring_leaf", "forest_leaf", "autumn_leaf"]};
 options('wingShape',Object.keys(wingPalettes),title);
 function setupWingColors(){options('wingColor',wingPalettes[$('wingShape').value],title);}
 setupWingColors();$('wingShape').onchange=()=>{setupWingColors();render();};$('wingColor').onchange=render;
-async function render(){syncHairSwatches();window.characterReady=false;document.dispatchEvent(new Event('character-preview-change'));const token=++version,race=species,angle=view,index=skin,hair=$('hair').value,eye=$('eyes').value,roots=$('mode').value==='roots';const pair=roots?hairPalettes.presets[$('preset').value]:[null,$('color').value];const length=hairPalettes.colors[pair[1]],rootColor=pair[0]?hairPalettes.colors[pair[0]]:null;
+async function render(){syncHairSwatches();window.characterReady=false;document.dispatchEvent(new Event('character-preview-change'));const token=++version,race=species,angle=view,index=skin,hair=$('hair').value,eye=$('eyes').value,roots=$('mode').value==='roots';const pair=roots?hairPalettes.presets[$('preset').value]:[null,$('color').value];const length=hairHex(pair[1]),rootColor=pair[0]?hairHex(pair[0]):null;
 $('wingOptions').hidden=race!=='fairy';const ws=$('wingShape').value,wc=$('wingColor').value,customWing=race==='fairy'&&!(ws==='classic'&&wc==='lilac');
 $('hairOptions').hidden=hair==='bald';$('solidOptions').hidden=roots;$('rootOptions').hidden=!roots;$('hairSample').style.background=rootColor?`linear-gradient(90deg,${rootColor} 50%,${length} 50%)`:length;
 $('speciesName').textContent=cap(race);$('description').textContent=descriptions[race];$('status').textContent='Updating preview…';document.querySelectorAll('[data-species]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.species===race)));document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===angle)));document.querySelectorAll('[data-skin]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.skin===index)));
