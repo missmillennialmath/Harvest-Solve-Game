@@ -1,0 +1,1 @@
+Soft Shading asset-only patch. Includes previous rounded silhouettes and root masks. Extract into repository root, replacing existing files. Three styles, three species, three views. No code changes. Browser testing pending.
