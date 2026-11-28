@@ -1,0 +1,1 @@
+Build 006.1.6.3E — approved inventory prototype (16/16 user tests). Replace general-store.html at repository root. Existing factorford.html from 006.1.6.3D.2 opens this page in its store dialog. Practice only: no real save changes. Simulation controls remain available. Seed artwork size normalization pending. Live GitHub Pages testing pending.
