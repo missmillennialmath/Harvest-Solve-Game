@@ -1,0 +1,1 @@
+Replace both HTML files together. Shared iframe retains practice inventory while town stays loaded. No save persistence. Directory artwork embedded; hotspots recalibrated. Browser acceptance pending.
