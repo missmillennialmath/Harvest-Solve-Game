@@ -1,0 +1,1 @@
+Build 005.2 review copy. Extract all files, run python START_PREVIEW.py or use a local HTTP server. Do not deploy yet. Local preview uses a separate browser origin; import an exported save to test existing characters. Position persistence deferred. Live browser tests pending. Import via Chronicles then Resume. Original files unchanged.
