@@ -1,0 +1,1 @@
+Water removed from visible store and purchase path. Stable item IDs retained. Thumbnail fix included. Well planned, not implemented. Practice economy unchanged. Upload incrementally; replace general-store.html if previous build installed.

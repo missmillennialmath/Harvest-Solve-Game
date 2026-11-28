@@ -1,0 +1,1 @@
+Overlay these files onto the existing 005.3.1 repository root. General Store entrance in Factorford opens general-store.html in an iframe. Practice purchases only; no persistent economy. Marketplace selling is not implemented. Keep existing menu and character assets.
